@@ -4,6 +4,9 @@ class studentInfoController {
 
     getStudentInfo(req, res) {
         
+
+
+
         conn.connect((err) => {
             if (err) {
                 console.log("############################################");
@@ -13,15 +16,28 @@ class studentInfoController {
             }
             console.log('Connected to MySQL successfully!');
 
-            conn.query('SELECT * FROM studinfo', (err, results, fields) => {
+            // conn.query('SELECT * FROM studinfo', (err, results, fields) => {
+            //     if (err) {
+            //         console.log("############################################");
+            //         console.error('Error executing query:', err);
+            //         console.log("############################################");
+            //         return;
+            //     }
+
+            //     // console.log('Results:', results);
+            //     res.send({ status: 200, message: "Success", data: results });
+            // })
+
+            // here is Stored Procedure for get user details.
+            
+            const getUserDetails = 'CALL getStudentsInfo();';
+            conn.query(getUserDetails, (err, results, fields) => {
                 if (err) {
                     console.log("############################################");
                     console.error('Error executing query:', err);
                     console.log("############################################");
                     return;
                 }
-
-                // console.log('Results:', results);
                 res.send({ status: 200, message: "Success", data: results });
             })
 
