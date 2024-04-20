@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', router)
 
 app.listen(8898, () => {
-    console.log("---------------------------------------------");
+    console.log("+-------------------------------------------+");
     console.log(`| Server listen at -> http://localhost:${8898} |`);
-    console.log("---------------------------------------------");
+    console.log("+-------------------------------------------+");
 })

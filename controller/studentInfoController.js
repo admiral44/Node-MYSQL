@@ -2,11 +2,8 @@ import { conn } from "../connection/conn.js";
 
 class studentInfoController {
 
-    getStudentInfo(req, res) {
+    static getStudentInfo = (req, res) => {
         
-
-
-
         conn.connect((err) => {
             if (err) {
                 console.log("############################################");
@@ -40,27 +37,30 @@ class studentInfoController {
                 }
                 res.send({ status: 200, message: "Success", data: results });
             })
-
-            conn.end((err) => {
-                if (err) {
-                    console.log("############################################");
-                    console.error('Error disconnecting from MySQL:', err);
-                    console.log("############################################");
-                    return;
-                }
-                console.log('Disconnected from MySQL successfully!');
-            })
         });
+
+        // conn.end((err) => {
+        //     if (err) {
+        //         console.log("############################################");
+        //         console.error('Error disconnecting from MySQL:', err);
+        //         console.log("############################################");
+        //         return;
+        //     }
+        //     console.log('Disconnected from MySQL successfully!');
+        // })
     }
+
     addStudentInfo(req, res) {
         res.send("Add Student Info");
     }
+    
     updateStudentInfo(req, res) {
         res.send("Update Student Info");
     }
+
     deleteStudentInfo(req, res) {
         res.send("Delete Student Info");
     }
 }
 
-export default new studentInfoController;
+export default studentInfoController;
