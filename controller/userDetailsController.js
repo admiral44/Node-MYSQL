@@ -6,8 +6,13 @@ class userDetailsController {
     static registerUser = async (req, res) => {
         const { name, number, password } = req.body;
 
-        if (!name || !number || !password) {return res.status(400).send({ message: "All fields are required", data: null });}
-        if (number.length !== 10) {return res.status(400).send({ message: "Invalid Phone Number", data: null });}
+        if (!name || !number || !password) { 
+            return res.send({ status:"400", message: "All fields are required", data: null }); 
+        }
+        
+        if (number.length !== 10) { 
+            return res.send({ status:"401", message: "Invalid Phone Number", data: null }); 
+        }
 
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
@@ -16,24 +21,32 @@ class userDetailsController {
         let createdDate = new Date();
         await executeQuery("CALL RegisterUser(?,?,?,?,?)", [u_id, name, number, hashPassword, createdDate]).then((results) => {
             if (results.status === 200) {
-                return res.status(200).send({ message: "User Registered Successfully", data: results.data[0] });
+                return res.send({ status: "200", message: "User Registered Successfully", data: results.data[0] });
             } else {
-                return res.status(500).send({ message: results.message, data: null });
+                return res.send({ status: "400", message: results.message, data: null });
             }
         })
     }
 
     static loginUser = async (req, res) => {
         const { number, password } = req.body;
-        if (!number || !password) {return res.status(400).send({ message: "All fields are required", data: null });}
+        if (!number || !password) {
+            return res.send({ status: "400" , message: "All fields are required" });
+        }
+
+        if (number.length !== 10) {
+            return res.send({ status: "400", message: "Invalid Phone Number" });
+        }
 
         await executeQuery("CALL LoginUser(?)", [number]).then(async (results) => {
             if (results.status === 200) {
-                const passStatus = await bcrypt.compare(password, results.data[0][0].user_pass).then((passRes) => {return passRes;});
-                if (!passStatus) { return res.status(400).send({ message: "Incorrect credentials!!", data: null });}
-                res.status(200).send({ message: "User Logged In Successfully", data: { id: results.data[0][0].user_id, name: results.data[0][0].user_name } });
+                const passStatus = await bcrypt.compare(password, results.data[0][0].user_pass).then((passRes) => { return passRes; });
+                if (!passStatus) {
+                    return res.send({ status: "401", message: "Incorrect credentials!!", data: null });
+                }
+                return res.send({ status: "200", message: "User Logged In Successfully", data: { id: results.data[0][0].user_id, name: results.data[0][0].user_name } });
             } else {
-                res.status(400).send({ message: results.message, data: null });
+                res.send({ code: "404", message: results.message, data: [] });
             }
         })
     }

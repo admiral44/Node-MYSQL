@@ -10,7 +10,7 @@ export const executeQuery = async (query, params) => {
     const data = await connection.query(query, params).then(async(results) => {
         return { status: 200, message: "Success", data: results[0] };
     }).catch(async(error) => {
-        return { status: 500, message: error.sqlMessage, data: error };
+        return { status: 404, message: error.sqlMessage };
     })
     
     // Close the connection pool
